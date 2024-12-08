@@ -22,8 +22,14 @@ fun main() {
         price = 2000,
     )
 
+    val brilliant = Good(
+        name = "brilliant",
+        weight = 3,
+        price = 1000000,
+    )
+
     val tableConfig = mapTableConfig(
-        goods = listOf(guitar, recorder, notebook, iphone),
+        goods = listOf(iphone, recorder, notebook, guitar, brilliant),
         maxCapacity = 4,
     )
     val maximumBenefitResult = getMaximumBenefit(tableConfig)
@@ -47,16 +53,15 @@ fun getMaximumBenefit(tableConfig: TableConfig): MaximumBenefitResult {
             // и идем дальше
             if (capacity < weights[previousWeightIndex]) {
                 table[weightIndex][capacity] = table[previousWeightIndex][capacity]
-                continue
+            } else {
+                val previousPrice = prices[previousWeightIndex]
+                // Выбираем максимум между предыщущей стоимостью и
+                // максимальной стоимостью оставшегося пространства + предыдущая стоимость
+                table[weightIndex][capacity] = max(
+                    a = table[previousWeightIndex][capacity],
+                    b = table[previousWeightIndex][capacity - weights[previousWeightIndex]] + previousPrice,
+                )
             }
-            val previousPrice = prices[previousWeightIndex]
-
-            // Выбираем максимум между предыщущей стоимостью и
-            // максимальной стоимостью оставшегося пространства + предыдущая стоимость
-            table[weightIndex][capacity] = max(
-                a = previousPrice,
-                b = table[previousWeightIndex][capacity - weights[previousWeightIndex]] + previousPrice,
-            )
         }
     }
 
@@ -115,8 +120,8 @@ private fun printTable(table: Array<IntArray>) {
     if (table.isEmpty()) {
         return
     }
-    for (row in 1..<table.size) {
-        for (col in 1..<table[0].size) {
+    for (row in 0..<table.size) {
+        for (col in 0..<table[0].size) {
             print("${table[row][col]} ")
         }
         println()
