@@ -54,12 +54,12 @@ fun getMaximumBenefit(tableConfig: TableConfig): MaximumBenefitResult {
             if (capacity < weights[previousWeightIndex]) {
                 table[weightIndex][capacity] = table[previousWeightIndex][capacity]
             } else {
-                val previousPrice = prices[previousWeightIndex]
-                // Выбираем максимум между предыщущей стоимостью и
-                // максимальной стоимостью оставшегося пространства + предыдущая стоимость
+                val currentPrice = prices[previousWeightIndex]
+                // Выбираем максимум между предыщущей стоимостью в таблице и
+                // максимальной стоимостью оставшегося пространства + текущая стоимость
                 table[weightIndex][capacity] = max(
                     a = table[previousWeightIndex][capacity],
-                    b = table[previousWeightIndex][capacity - weights[previousWeightIndex]] + previousPrice,
+                    b = table[previousWeightIndex][capacity - weights[previousWeightIndex]] + currentPrice,
                 )
             }
         }
@@ -120,9 +120,9 @@ private fun printTable(table: Array<IntArray>) {
     if (table.isEmpty()) {
         return
     }
-    for (row in 0..<table.size) {
+    for (element in table) {
         for (col in 0..<table[0].size) {
-            print("${table[row][col]} ")
+            print("${element[col]} ")
         }
         println()
     }
